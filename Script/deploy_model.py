@@ -39,7 +39,7 @@ def extract_model_metadata(model):
         if hasattr(model, 'n_estimators'):
             model_metadata['n_estimators'] = model.n_estimators
     
-    return model_metadata
+    return model_metadata, model_type
 
 def save_model(model, model_dir, model_name):
     os.makedirs(model_dir, exist_ok=True)
@@ -73,12 +73,12 @@ def save_metadata(model_name, timestamp, model_path, metadata_dir, metadata):
     
     logging.info("Model metadata saved successfully.")
 
-def deploy_model(model_path, model_dir, model_name, metadata_dir, additional_metadata):
+def deploy_model(model_path, model_dir, metadata_dir, additional_metadata):
     # Load the trained model
     model = load_model(model_path)
     
-    # Extract dynamic metadata from the model
-    model_metadata = extract_model_metadata(model)
+    # Extract dynamic metadata and model name from the model
+    model_metadata, model_name = extract_model_metadata(model)
     
     # Merge additional metadata passed from the command line (if any)
     if additional_metadata:
@@ -101,7 +101,6 @@ if __name__ == "__main__":
     # Arguments
     parser.add_argument('--model_path', type=str, required=True, help="Path to the trained model file.")
     parser.add_argument('--model_dir', type=str, required=True, help="Directory to save the deployed model.")
-    parser.add_argument('--model_name', type=str, required=True, help="The name of the model to include in the saved filename.")
     parser.add_argument('--metadata_dir', type=str, required=True, help="Directory to save model metadata.")
     parser.add_argument('--metadata', type=str, help="Optional additional model metadata in JSON format.")
     
@@ -116,5 +115,5 @@ if __name__ == "__main__":
             logging.error(f"Error decoding metadata: {e}")
             raise ValueError("Invalid metadata JSON format.")
     
-    # Deploy the model with the model name and additional metadata
-    deploy_model(args.model_path, args.model_dir, args.model_name, args.metadata_dir, additional_metadata)
+    # Deploy the model with automatically extracted model name and additional metadata
+    deploy_model(args.model_path, args.model_dir, args.metadata_dir, additional_metadata)

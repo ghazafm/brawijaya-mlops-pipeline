@@ -19,26 +19,26 @@ def load_preprocessor(preprocessor_dir):
     
     # Load all preprocessing objects
     scaler = joblib.load(os.path.join(preprocessor_dir, 'scaler.pkl'))
-    label_encoders = joblib.load(os.path.join(preprocessor_dir, 'label_encoders.pkl'))
+    # label_encoders = joblib.load(os.path.join(preprocessor_dir, 'label_encoders.pkl'))
     imputer = joblib.load(os.path.join(preprocessor_dir, 'imputer.pkl'))
     
     logging.info("Preprocessor objects loaded successfully.")
-    return scaler, label_encoders, imputer
+    return scaler, imputer
 
 def load_new_data(data_dir):
     logging.info(f"Loading new data from {data_dir}...")
-    new_data_path = os.path.join(data_dir, 'new_data.csv')  # Assuming new data is stored in new_data.csv
+    new_data_path = os.path.join(data_dir, 'test.csv')  # Assuming new data is stored in new_data.csv
     new_data = pd.read_csv(new_data_path)
     logging.info("New data loaded successfully.")
     return new_data
 
-def preprocess_data(new_data, scaler, label_encoders, imputer):
+def preprocess_data(new_data, scaler, imputer):
     logging.info("Applying imputer to fill missing values...")
     new_data_imputed = pd.DataFrame(imputer.transform(new_data), columns=new_data.columns)
     
-    logging.info("Applying label encoders for categorical columns...")
-    for col, encoder in label_encoders.items():
-        new_data_imputed[col] = encoder.transform(new_data_imputed[col])
+    # logging.info("Applying label encoders for categorical columns...")
+    # for col, encoder in label_encoders.items():
+    #     new_data_imputed[col] = encoder.transform(new_data_imputed[col])
     
     logging.info("Scaling the data...")
     new_data_scaled = pd.DataFrame(scaler.transform(new_data_imputed), columns=new_data_imputed.columns)
@@ -55,13 +55,13 @@ def main(model_path, preprocessor_dir, data_dir, output_file):
     model = load_model(model_path)
     
     # Load preprocessing objects
-    scaler, label_encoders, imputer = load_preprocessor(preprocessor_dir)
+    scaler, imputer = load_preprocessor(preprocessor_dir)
     
     # Load new data for prediction
     new_data = load_new_data(data_dir)
     
     # Preprocess the new data
-    new_data_processed = preprocess_data(new_data, scaler, label_encoders, imputer)
+    new_data_processed = preprocess_data(new_data, scaler, imputer)
     
     # Make predictions
     logging.info("Making predictions...")
