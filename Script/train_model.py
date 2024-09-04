@@ -48,8 +48,8 @@ def train_model(X_train, y_train, model_name='xgboost', params=None):
         model = XGBClassifier(**(params or {}))
     elif model_name == 'lgbm' or model_name == 'gbdt':
         model = LGBMClassifier(**(params or {}))
-    elif model_name == 'catboost':
-        model = CatBoostClassifier(verbose=0, **(params or {}))  # Suppress verbose logging for CatBoost
+    # elif model_name == 'catboost':
+    #     model = CatBoostClassifier(verbose=0, **(params or {}))
     elif model_name == 'random_forest':
         model = RandomForestClassifier(n_estimators=100, random_state=42, **(params or {}))
     elif model_name == 'svm':
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train a machine learning model.")
     parser.add_argument('-d', '--data_dir', type=str, required=True, help="Directory where the processed data is stored.")
     parser.add_argument('-m', '--model_dir', type=str, required=True, help="Directory where the trained model will be saved.")
-    parser.add_argument('-n', '--model_name', type=str, default='xgboost', help="Model to train. Options: 'xgboost', 'lgbm', 'catboost', 'random_forest', 'svm', 'logistic_regression'.")
+    parser.add_argument('-n', '--model_name', type=str, default='xgboost', help="Model to train. Options: 'xgboost', 'lgbm', 'random_forest', 'svm', 'logistic_regression'.")
     parser.add_argument('-p', '--params', type=str, default=None, help="Optional model hyperparameters in JSON format.")
     
     args = parser.parse_args()
