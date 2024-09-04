@@ -62,8 +62,13 @@ def save_preprocessing_objects(scaler, label_encoders, imputer, removed_cols, ou
     logging.info("Preprocessing objects saved successfully.")
 
 # Clean and preprocess the data
-def clean_data(df, target_col):
+def clean_data(df, target_col, columns_to_remove=None):
     logging.info("Cleaning data...")
+    
+    # Drop specified columns
+    if columns_to_remove:
+        logging.info(f"Removing columns: {columns_to_remove}")
+        df = df.drop(columns=columns_to_remove)
     
     # Drop Duplicates
     df = df.drop_duplicates()
@@ -112,13 +117,13 @@ def save_data(X_train, X_test, y_train, y_test, data_dir):
     logging.info("Processed data saved successfully.")
 
 # Main function
-def main(data_dir, output_dir, target_col, random_state):
+def main(data_dir, output_dir, target_col, random_state, columns_to_remove):
     # Load raw data
     raw_data_path = os.path.join(data_dir, 'train.csv') 
     df = load_data(raw_data_path)
     
     # Clean the data
-    df_cleaned, label_encoders, imputer = clean_data(df, target_col)
+    df_cleaned, label_encoders, imputer = clean_data(df, target_col, columns_to_remove)
     
     # Split the data into train and test sets
     X_train, X_test, y_train, y_test = split_data(df_cleaned, target_col, random_state=random_state)
@@ -134,7 +139,7 @@ def main(data_dir, output_dir, target_col, random_state):
     save_data(X_train_balanced, X_test, y_train_balanced, y_test, data_dir)
 
     # Save preprocessing objects for future use (for prediction)
-    save_preprocessing_objects(scaler, label_encoders, imputer, [], output_dir)
+    save_preprocessing_objects(scaler, label_encoders, imputer, columns_to_remove, output_dir)
     
     logging.info("Data preparation and preprocessing completed successfully!")
 
@@ -144,7 +149,8 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', type=str, required=True, help="Directory to save preprocessing objects.")
     parser.add_argument('--target_col', type=str, required=True, help="Target column name.")
     parser.add_argument('--random_state', type=int, default=42, help="Random state for reproducibility.")
+    parser.add_argument('--columns_to_remove', nargs='+', help="List of columns to remove from the dataset.")
     
     args = parser.parse_args()
     
-    main(args.data_dir, args.output_dir, args.target_col, args.random_state)
+    main(args.data_dir, args.output_dir, args.target_col, args.random_state, args.columns_to_remove)

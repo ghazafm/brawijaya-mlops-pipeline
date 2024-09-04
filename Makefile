@@ -2,11 +2,14 @@
 DATA_DIR = Data/
 MODEL_DIR = Model/model
 RESULTS_DIR = Result/scores
-TEST_RESULT_DIR = Result/test
-PREPROCESSOR_DIR = Model/preprocessor/  # Directory to store preprocessor objects
-PREDICTION_RESULTS = $(RESULTS_DIR)/predictions.csv
+TEST_RESULT_DIR = Result/test 
+PREPROCESSOR_DIR = Model/preprocessor
+NEW_DATA_DIR = Data/
+COLUMN_TO_REMOVE = "Cabin"
 
-# Find the latest model based on timestamp
+TIMESTAMP = $(shell date +"%Y%m%d_%H%M%S")
+PREDICTION_RESULTS = $(TEST_RESULT_DIR)/predictions_$(TIMESTAMP).csv
+
 LATEST_MODEL = $(shell ls -t $(MODEL_DIR)/*.pkl | head -n 1)
 
 # Default target
@@ -22,12 +25,13 @@ help:
 	@echo "  make evaluate  : Evaluate the trained model."
 	@echo "  make deploy    : Save and deploy the trained model."
 	@echo "  make predict   : Run predictions on new data."
+	@echo "  make clean     : Clean data, model, and result directories."
 
 # Step 1: Data collection and preparation
 .PHONY: data
 data:
 	@echo "Collecting and preparing data..."
-	python scripts/data_preparation.py --data_dir $(DATA_DIR) --output_dir $(PREPROCESSOR_DIR) --target_col target_column
+	python scripts/data_preparation.py --data_dir $(DATA_DIR) --output_dir $(PREPROCESSOR_DIR) --target_col target_column --columns_to_remove $(COLUMN_TO_REMOVE)
 	@echo "Data preparation completed."
 
 # Step 2: Model training
@@ -55,13 +59,12 @@ deploy: train
 .PHONY: predict
 predict: deploy
 	@echo "Running predictions on new data..."
-	python scripts/predict_data.py --model $(LATEST_MODEL) --preprocessor $(PREPROCESSOR_DIR) --data_dir $(NEW_DATA_DIR) --output $(RESULTS_DIR)/test/predictions.csv
-	@echo "Predictions saved to $(RESULTS_DIR)/test/predictions.csv."
-
+	python scripts/predict_data.py --model $(LATEST_MODEL) --preprocessor $(PREPROCESSOR_DIR) --data_dir $(NEW_DATA_DIR) --output $(PREDICTION_RESULTS)
+	@echo "Predictions saved to $(PREDICTION_RESULTS)."
 
 # Clean the data, model, and result directories
 .PHONY: clean
 clean:
 	@echo "Cleaning up..."
-	rm -rf $(DATA_DIR)/* $(MODEL_DIR)/* $(RESULTS_DIR)/*
+	rm -rf $(DATA_DIR)/* $(MODEL_DIR)/* $(RESULTS_DIR)/* $(TEST_RESULT_DIR)/*
 	@echo "Clean up completed."
