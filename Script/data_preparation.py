@@ -8,7 +8,7 @@ from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import train_test_split
 import logging
 
-log_dir = os.path.join(os.path.dirname(os.getcwd()), 'Log')  
+log_dir = os.path.join(os.path.dirname(os.getcwd()), 'CODE/Log')  
 os.makedirs(log_dir, exist_ok=True) 
 log_file_path = os.path.join(log_dir, 'preparation.log')
 
