@@ -53,7 +53,7 @@ train: data
 .PHONY: evaluate
 evaluate: train
 	@echo "Evaluating the trained model..."
-	python Script/evaluate_model.py --model $(LATEST_MODEL) --results_dir $(SCORE_RESULTS_DIR)
+	python Script/evaluate_model.py --model $(LATEST_MODEL) --results_dir $(SCORE_RESULTS_DIR) --data_dir $(DATA_DIR)
 	@echo "Model evaluation completed."
 
 # Model deployment (saving the model)
