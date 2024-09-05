@@ -162,3 +162,4 @@ cython_debug/
 #.idea/
 
 timestamp.txt
+Model/model/deploy_model_path.txt
