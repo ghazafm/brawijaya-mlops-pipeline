@@ -3,6 +3,7 @@ import argparse
 import pandas as pd
 import joblib
 import logging
+import numpy as np
 
 log_dir = os.path.join(os.path.dirname(os.getcwd()), "CODE/Log")
 os.makedirs(log_dir, exist_ok=True)
@@ -40,9 +41,8 @@ def load_new_data(data_dir, id_col):
     new_data_path = os.path.join(data_dir, "test.csv")
     new_data = pd.read_csv(new_data_path)
 
-    ids = new_data[id_col]
+    ids = new_data.pop(id_col)
     logging.info(f"New data and ID column loaded successfully.")
-
     return new_data, ids
 
 
@@ -52,24 +52,29 @@ def preprocess_data(new_data, scaler, imputer, encoder, removed_cols, id_col):
     columns_to_remove = [col for col in removed_cols if col != id_col]
     new_data = new_data.drop(columns=columns_to_remove, errors="ignore")
 
-    logging.info("Applying imputer to fill missing values...")
-    new_data_imputed = pd.DataFrame(
-        imputer.transform(new_data), columns=new_data.columns
-    )
-
+    # Apply label encoders for categorical columns
     logging.info("Applying label encoders for categorical columns...")
     for col, enc in encoder.items():
-        new_data_imputed[col] = enc.transform(new_data_imputed[col].astype(str))
+        # Handle unseen categories by assigning a fallback value (e.g., -1 or the most frequent category)
+        if col in new_data.columns:
+            new_data[col] = new_data[col].astype(str)  # Ensure correct data type
+            unseen_mask = ~new_data[col].isin(enc.classes_)
+            if unseen_mask.any():
+                logging.warning(f"Unseen categories in column {col}. Assigning -1 for unseen values.")
+                new_data[col] = new_data[col].apply(lambda x: x if x in enc.classes_ else '-1')
+                enc.classes_ = np.append(enc.classes_, '-1')  # Append unseen label to classes
+            new_data[col] = enc.transform(new_data[col])
 
     logging.info("Scaling the data...")
     new_data_scaled = pd.DataFrame(
-        scaler.transform(new_data_imputed), columns=new_data_imputed.columns
+        scaler.transform(new_data), columns=new_data.columns
     )
 
     if id_col in new_data_scaled.columns:
         new_data_scaled = new_data_scaled.drop(columns=[id_col])
 
     return new_data_scaled
+
 
 
 
@@ -84,7 +89,7 @@ def save_predictions(predictions, ids, predictions_dir, model_name, timestamp):
     logging.info("Predictions saved successfully.")
 
 
-def main(model_path, id_col, preprocessor_dir, data_dir, timestamp):
+def main(model_path, id_col,prediction_dir, preprocessor_dir, data_dir, timestamp):
     # Load the trained model
     model = load_model(model_path)
 
@@ -93,7 +98,8 @@ def main(model_path, id_col, preprocessor_dir, data_dir, timestamp):
 
     # Load new data for prediction
     new_data, ids = load_new_data(data_dir, id_col)
-
+    
+    print(new_data.columns)
     # Preprocess the new data
     new_data_processed = preprocess_data(
         new_data, scaler, imputer, encoder, removed_cols, id_col
@@ -104,7 +110,7 @@ def main(model_path, id_col, preprocessor_dir, data_dir, timestamp):
     predictions = model.predict(new_data_processed)
 
     # Save predictions
-    save_predictions(pd.DataFrame(predictions, columns=["Prediction"]), timestamp)
+    save_predictions(pd.DataFrame(predictions, columns=["Prediction"]), id_col,predictions_dir= prediction_dir,model_name= "xgboost",timestamp=timestamp)
 
 
 if __name__ == "__main__":

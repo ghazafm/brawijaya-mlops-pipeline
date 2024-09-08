@@ -76,7 +76,7 @@ def save_preprocessing_objects(
 
 
 # Clean and preprocess the data
-def clean_data(df, target_col, columns_to_remove=None):
+def clean_data(df, columns_to_remove=None):
     logging.info("Cleaning data...")
 
     # Drop specified columns
@@ -147,7 +147,7 @@ def main(data_dir, output_dir, target_col, random_state, columns_to_remove, time
     df = load_data(raw_data_path)
 
     # Clean the data
-    df_cleaned, label_encoders, imputer = clean_data(df, target_col, columns_to_remove)
+    df_cleaned, label_encoders, imputer = clean_data(df, columns_to_remove)
 
     # Split the data into train and test sets
     X_train, X_test, y_train, y_test = split_data(
