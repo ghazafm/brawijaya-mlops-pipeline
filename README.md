@@ -1,4 +1,4 @@
-# Machine Learning Project
+# Machine Learning Operations Project
 
 This project demonstrates a complete machine learning workflow, including data preparation, model training, evaluation, and prediction. The project structure is organized to separate different stages and files for better management and reproducibility.
 
