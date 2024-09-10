@@ -68,15 +68,19 @@ conda_env:
 	
 .PHONY: venv_env
 venv_env:
-	@echo "Creating Python virtual environment using venv..."
-	python3 -m venv $(ENV_DIR)
-	@echo "Environment created at $(ENV_DIR)."
-	@echo "Activating environment and upgrading pip..."
-	$(VENV_ACTIVATE) && pip install --upgrade pip
-	@echo "Installing packages from $(REQUIREMENTS_FILE)..."
-	$(VENV_ACTIVATE) && pip install -r $(REQUIREMENTS_FILE)
-	@echo "Packages installed in venv environment."
-
+	@if [ -d "$(ENV_DIR)" ]; then \
+		echo "Virtual environment already exists at $(ENV_DIR). Updating packages..."; \
+		$(VENV_ACTIVATE) && pip install --upgrade pip && pip install -r $(REQUIREMENTS_FILE); \
+	else \
+		echo "Creating Python virtual environment using venv..."; \
+		python3 -m venv $(ENV_DIR); \
+		echo "Environment created at $(ENV_DIR)."; \
+		echo "Activating environment and upgrading pip..."; \
+		$(VENV_ACTIVATE) && pip install --upgrade pip; \
+		echo "Installing packages from $(REQUIREMENTS_FILE)..."; \
+		$(VENV_ACTIVATE) && pip install -r $(REQUIREMENTS_FILE); \
+		echo "Packages installed in venv environment."; \
+	fi
 # Generate a timestamp and save it to a file
 .PHONY: timestamp
 timestamp:
@@ -135,7 +139,14 @@ clean: clean_data clean_models clean_results clean_preprocessor
 .PHONY: clean_all
 clean_all: clean clean_log
 	@echo
-	@echo "Complete cleanup completed."
+	@echo "Complete deep cleanup completed."
+
+# Clean env
+.PHONY: clean_env
+clean_env:
+	@echo
+	rm -rf $(ENV_DIR)/
+	@echo "Complete env removed."
 
 # Clean only data
 .PHONY: clean_data
