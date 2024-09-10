@@ -52,7 +52,7 @@ make conda_env
 make venv_env
 ```
 
-### 3. Activate the Virtual Environment
+### 3. Activate the Virtual Environment (Optional)
 - Conda:
   ```bash
   conda activate ./myenv
