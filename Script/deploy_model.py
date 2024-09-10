@@ -5,7 +5,7 @@ import json
 import logging
 from datetime import datetime
 
-log_dir = os.path.join(os.path.dirname(os.getcwd()), "Log")
+log_dir = os.path.join(os.path.join(os.getcwd()), "Log")
 os.makedirs(log_dir, exist_ok=True)
 log_file_path = os.path.join(log_dir, "deploy.log")
 

@@ -8,7 +8,7 @@ from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import train_test_split
 import logging
 
-log_dir = os.path.join(os.path.dirname(os.getcwd()), "Log")
+log_dir = os.path.join(os.path.join(os.getcwd()), "Log")
 os.makedirs(log_dir, exist_ok=True)
 log_file_path = os.path.join(log_dir, "preparation.log")
 
@@ -141,7 +141,7 @@ def save_data(X_train, X_test, y_train, y_test, data_dir):
 
 
 # Main function
-def main(data_dir, output_dir, target_col, random_state, columns_to_remove, timestamp):
+def main(data_dir,data_new_dir, output_dir, target_col, random_state, columns_to_remove, timestamp):
     # Load raw data
     raw_data_path = os.path.join(data_dir, "train.csv")
     df = load_data(raw_data_path)
@@ -164,7 +164,7 @@ def main(data_dir, output_dir, target_col, random_state, columns_to_remove, time
     )
 
     # Save the processed data
-    save_data(X_train_balanced, X_test, y_train_balanced, y_test, data_dir)
+    save_data(X_train_balanced, X_test, y_train_balanced, y_test, data_new_dir)
 
     # Save preprocessing objects for future use (for prediction)
     save_preprocessing_objects(
@@ -184,6 +184,13 @@ if __name__ == "__main__":
         type=str,
         required=True,
         help="Directory where the data is stored and processed.",
+    )
+    parser.add_argument(
+        "-dn",
+        "--data_new",
+        type=str,
+        required=True,
+        help="Directory where the clean data is stored.",
     )
     parser.add_argument(
         "-o",
@@ -220,6 +227,7 @@ if __name__ == "__main__":
 
     main(
         args.data_dir,
+        args.data_new,
         args.output_dir,
         args.target_col,
         args.random_state,

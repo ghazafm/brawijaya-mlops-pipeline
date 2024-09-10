@@ -12,7 +12,7 @@ from sklearn.metrics import (
 import joblib
 import logging
 
-log_dir = os.path.join(os.path.dirname(os.getcwd()), "Log")
+log_dir = os.path.join(os.path.join(os.getcwd()), "Log")
 os.makedirs(log_dir, exist_ok=True)
 log_file_path = os.path.join(log_dir, "evaluation.log")
 
@@ -86,7 +86,7 @@ def save_evaluation_results(
 
     result_name_time = f"{model}_{timestamp}"
 
-    results_path = os.path.join(results_dir, f"{result_name_time}.pkl")
+    results_path = os.path.join(results_dir, f"{result_name_time}.txt")
 
     logging.info(f"Saving evaluation results to {results_path}...")
 
@@ -101,7 +101,7 @@ def save_evaluation_results(
     logging.info("Evaluation results saved successfully.")
 
 
-def main(model_path, data_dir, results_dir):
+def main(model_path, data_dir, results_dir, timestamp):
     # Load test data
     X_test, y_test = load_data(data_dir)
 
@@ -114,7 +114,7 @@ def main(model_path, data_dir, results_dir):
 
     # Save evaluation results
     save_evaluation_results(
-        results_dir, model_type, accuracy, precision, recall, f1, report
+        results_dir, model_type, accuracy, precision, recall, f1, report, timestamp
     )
 
     logging.info("Model evaluation completed successfully.")
@@ -160,4 +160,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Execute the main function
-    main(args.model_path, args.data_dir, args.results_dir)
+    main(model_path=args.model_path, data_dir=args.data_dir, results_dir=args.results_dir, timestamp=args.timestamp)

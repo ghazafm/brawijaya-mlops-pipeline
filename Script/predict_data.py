@@ -5,7 +5,7 @@ import joblib
 import logging
 import numpy as np
 
-log_dir = os.path.join(os.path.dirname(os.getcwd()), "Log")
+log_dir = os.path.join(os.path.join(os.getcwd()), "Log")
 os.makedirs(log_dir, exist_ok=True)
 log_file_path = os.path.join(log_dir, "predict.log")
 
@@ -80,8 +80,8 @@ def preprocess_data(new_data, scaler, imputer, encoder, removed_cols, id_col):
 
 def save_predictions(predictions, ids, predictions_dir, model_name, timestamp):
     os.makedirs(predictions_dir, exist_ok=True)
-    prediction_name_with_time = f"{model_name}_{timestamp}"
-
+    prediction_name_with_time = f"{predictions_dir}/{model_name}_{timestamp}.csv"
+    
     predictions = pd.DataFrame({"ID": ids, "Prediction": predictions})
 
     logging.info(f"Saving predictions to {prediction_name_with_time}...")
@@ -99,7 +99,6 @@ def main(model_path, id_col,prediction_dir, preprocessor_dir, data_dir, timestam
     # Load new data for prediction
     new_data, ids = load_new_data(data_dir, id_col)
     
-    print(new_data.columns)
     # Preprocess the new data
     new_data_processed = preprocess_data(
         new_data, scaler, imputer, encoder, removed_cols, id_col
@@ -108,9 +107,11 @@ def main(model_path, id_col,prediction_dir, preprocessor_dir, data_dir, timestam
     # Make predictions
     logging.info("Making predictions...")
     predictions = model.predict(new_data_processed)
-
+    # predictions = pd.DataFrame(predictions, columns=["Prediction"], index=False)
+    # ids = pd.DataFrame(ids, index=False)
+    
     # Save predictions
-    save_predictions(pd.DataFrame(predictions, columns=["Prediction"]), id_col,predictions_dir= prediction_dir,model_name= "xgboost",timestamp=timestamp)
+    save_predictions(predictions, ids,predictions_dir= prediction_dir,model_name= "xgboost",timestamp=timestamp)
 
 
 if __name__ == "__main__":
@@ -142,6 +143,13 @@ if __name__ == "__main__":
         help="Directory where the new data is stored.",
     )
     parser.add_argument(
+        "-pd",
+        "--predict_dir",
+        type=str,
+        required=True,
+        help="Directory where the prediction is stored.",
+    )
+    parser.add_argument(
         "-t",
         "--timestamp",
         type=str,
@@ -150,4 +158,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    main(model_path=args.model, id_col=args.id_col, preprocessor_dir=args.preprocessor, data_dir=args.data_dir, timestamp=args.timestamp)
+    main(model_path=args.model, id_col=args.id_col, preprocessor_dir=args.preprocessor, data_dir=args.data_dir, timestamp=args.timestamp, prediction_dir=args.predict_dir)
