@@ -17,9 +17,9 @@ DEPLOYED_MODEL=$(shell cat $(DEPLOYED_MODEL_FILE))
 TIMESTAMP_FILE = timestamp.txt
 LATEST_MODEL = $(shell ls -t $(MODEL_DIR)/*.pkl | head -n 1)
 
-VENV_DIR = myenv
-VENV_ACTIVATE = source $(VENV_DIR)/bin/activate
-PYTHON = $(VENV_DIR)/bin/python
+ENV_DIR = $(shell pwd)/myenv
+VENV_ACTIVATE = source $(ENV_DIR)/bin/activate
+PYTHON = $(ENV_DIR)/bin/python
 REQUIREMENTS_FILE = requirements.txt
 ENVIRONMENT_FILE = environment.yml
 
@@ -46,7 +46,7 @@ help:
 # Check if environment exists, or prompt to create one
 .PHONY: check_env
 check_env:
-	@if [ ! -d "$(VENV_DIR)" ]; then \
+	@if [ ! -d "$(ENV_DIR)" ]; then \
 		echo "Environment not found. Please create one with 'make conda_env' or 'make venv_env'."; \
 		exit 1; \
 	fi
@@ -56,15 +56,21 @@ check_env:
 conda_env:
 	@echo "Checking for Conda..."
 	@which conda >/dev/null 2>&1 || { echo >&2 "Conda is not installed. Please install Conda."; exit 1; }
-	@echo "Creating Conda environment..."
-	conda env create -f $(ENVIRONMENT_FILE)
-	@echo "Environment created using $(ENVIRONMENT_FILE)."
+	@echo "Checking if Conda environment exists at $(ENV_DIR)..."
+	@if [ -d "$(ENV_DIR)" ]; then \
+		echo "Updating existing Conda environment at $(ENV_DIR)..."; \
+		conda env update -f $(ENVIRONMENT_FILE) -p $(ENV_DIR); \
+	else \
+		echo "Creating Conda environment..."; \
+		conda env create -f $(ENVIRONMENT_FILE) -p $(ENV_DIR); \
+	fi
+	@echo "Environment is now up-to-date at $(ENV_DIR)."
 	
 .PHONY: venv_env
 venv_env:
 	@echo "Creating Python virtual environment using venv..."
-	python3 -m venv $(VENV_DIR)
-	@echo "Environment created at $(VENV_DIR)."
+	python3 -m venv $(ENV_DIR)
+	@echo "Environment created at $(ENV_DIR)."
 	@echo "Activating environment and upgrading pip..."
 	$(VENV_ACTIVATE) && pip install --upgrade pip
 	@echo "Installing packages from $(REQUIREMENTS_FILE)..."

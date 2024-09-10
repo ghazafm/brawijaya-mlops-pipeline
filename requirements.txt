@@ -2,7 +2,7 @@ pandas
 scikit-learn
 xgboost
 numpy
-imblearn
+imbalanced-learn
 matplotlib
 lightgbm
 catboost
