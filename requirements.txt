@@ -6,3 +6,5 @@ imbalanced-learn
 matplotlib
 lightgbm
 catboost
+mlflow
+bentoml

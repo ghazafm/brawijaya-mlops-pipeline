@@ -10,4 +10,6 @@ dependencies:
   - xgboost
   - lightgbm
   - catboost
+  - mlflow
+  - bentoml
 
