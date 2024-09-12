@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/fauzanghaza/Downloads/MLOps/mlruns/0/052d1899e7c6465e96501809d9b945c9/artifacts
+end_time: 1726109030142
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 052d1899e7c6465e96501809d9b945c9
+run_name: exultant-mole-654
+run_uuid: 052d1899e7c6465e96501809d9b945c9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726109028643
+status: 4
+tags: []
+user_id: fauzanghaza

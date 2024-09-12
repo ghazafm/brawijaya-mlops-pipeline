@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/fauzanghaza/Downloads/MLOps/mlruns/0/e0d6842fd0264563bfcb8e32282e0d91/artifacts
+end_time: 1726109141559
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e0d6842fd0264563bfcb8e32282e0d91
+run_name: respected-auk-457
+run_uuid: e0d6842fd0264563bfcb8e32282e0d91
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726109135905
+status: 3
+tags: []
+user_id: fauzanghaza

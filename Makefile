@@ -14,6 +14,8 @@ ID_COL = PassengerId
 RANDOM_STATE = 42
 DEPLOYED_MODEL=$(shell cat $(DEPLOYED_MODEL_FILE))
 
+MODEL_NAME = random_forest
+
 TIMESTAMP_FILE = timestamp.txt
 LATEST_MODEL = $(shell ls -t $(MODEL_DIR)/*.pkl | head -n 1)
 
@@ -101,7 +103,7 @@ data: check_env timestamp
 train: data
 	@echo
 	@echo "Training the machine learning model..."
-	$(PYTHON) Script/train_model.py --data_dir $(NEW_DATA_DIR) --model_dir $(MODEL_DIR) --timestamp $(shell cat $(TIMESTAMP_FILE))
+	$(PYTHON) Script/train_model.py --data_dir $(NEW_DATA_DIR) --model_dir $(MODEL_DIR) --timestamp $(shell cat $(TIMESTAMP_FILE)) --model_name $(MODEL_NAME)
 	@echo "Model training completed."
 
 # Model evaluation

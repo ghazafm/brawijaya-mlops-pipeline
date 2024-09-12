@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/fauzanghaza/Downloads/MLOps/mlruns/0/43af69c647604e5b9ae40913896b7a94/artifacts
+end_time: 1726109999611
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 43af69c647604e5b9ae40913896b7a94
+run_name: mercurial-carp-529
+run_uuid: 43af69c647604e5b9ae40913896b7a94
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726109995638
+status: 3
+tags: []
+user_id: fauzanghaza

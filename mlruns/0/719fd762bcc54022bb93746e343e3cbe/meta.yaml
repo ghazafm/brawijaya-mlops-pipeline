@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/fauzanghaza/Downloads/MLOps/mlruns/0/719fd762bcc54022bb93746e343e3cbe/artifacts
+end_time: 1726110335848
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 719fd762bcc54022bb93746e343e3cbe
+run_name: sassy-cub-299
+run_uuid: 719fd762bcc54022bb93746e343e3cbe
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726110332005
+status: 3
+tags: []
+user_id: fauzanghaza

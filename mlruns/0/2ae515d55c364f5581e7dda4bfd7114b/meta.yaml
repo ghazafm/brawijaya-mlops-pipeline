@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/fauzanghaza/Downloads/MLOps/mlruns/0/2ae515d55c364f5581e7dda4bfd7114b/artifacts
+end_time: 1726109485561
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 2ae515d55c364f5581e7dda4bfd7114b
+run_name: enchanting-crow-267
+run_uuid: 2ae515d55c364f5581e7dda4bfd7114b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726109481809
+status: 3
+tags: []
+user_id: fauzanghaza
