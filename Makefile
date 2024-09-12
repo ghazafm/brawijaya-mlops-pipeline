@@ -185,7 +185,7 @@ clean_preprocessor:
 .PHONY: clean_log
 clean_log:
 	@echo
-	@echo "Cleaning up preprocessor objects..."
+	@echo "Cleaning up log..."
 	rm -rf Log/*
-	@echo "Preprocessor cleaned."
+	@echo "Log cleaned."
 
